@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'rubygems'
+require 'bundler/setup'
 require 'ruote'
 require 'ruote/storage/fs_storage'
 require 'fileutils'

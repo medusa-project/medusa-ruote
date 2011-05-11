@@ -3,6 +3,7 @@
 #return on ruote_workitems queue
 
 require 'rubygems'
+require 'bundler/setup'
 require 'mq'
 require 'bunny'
 require 'yajl'
