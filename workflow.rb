@@ -80,6 +80,9 @@ RuoteAMQP::Receiver.new(engine)
 
 #I'm not sure how to get this to interact properly with the RuoteAMQP::Receiver Event machine
 #So for now I'm going to punt and use a simple loop
+#Looking through the code for the RuoteAMQP::Receiver, it starts up a thread in which it
+#starts AMQP (which in turn starts event machine). This is Thread.main[:ruote_amqp_connection].
+#Maybe if we grab this thread and run in its context we can attach more stuff to the event machine?
 #EventMachine.run do
 #  EventMachine::PeriodicTimer.new(5) do
 #    puts 'checking in directory'
