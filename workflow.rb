@@ -74,35 +74,25 @@ process = Ruote.process_definition do
   end
 end
 
-#for getting workitems back from AMQP server
-#Note that this starts up event machine
-RuoteAMQP::Receiver.new(engine)
-
-#I'm not sure how to get this to interact properly with the RuoteAMQP::Receiver Event machine
-#So for now I'm going to punt and use a simple loop
-#Looking through the code for the RuoteAMQP::Receiver, it starts up a thread in which it
-#starts AMQP (which in turn starts event machine). This is Thread.main[:ruote_amqp_connection].
-#Maybe if we grab this thread and run in its context we can attach more stuff to the event machine?
-#EventMachine.run do
-#  EventMachine::PeriodicTimer.new(5) do
-#    puts 'checking in directory'
-#    Dir['in/*_ready'].each do |dir|
-#      dir_name = File.basename(dir).sub(/_ready$/, '')
-#      puts "launching ruote process to handle #{dir_name}"
-#      engine.launch(process, 'dir' => dir_name)
-#    end
-#  end
-#  MQ.queue('ruote_workitems').subscribe do |workitem|
-#    reply_to_engine(JSON.parse(workitem))
-#  end
-#end
-
-loop do
-  sleep 5
-  puts 'checking in directory'
-  Dir['in/*_ready'].each do |dir|
-    dir_name = File.basename(dir).sub(/_ready$/, '')
-    puts "launching ruote process to handle #{dir_name}"
-    engine.launch(process, 'dir' => dir_name)
+#Since RuoteAMQP::Receiver starts up its own event machine and there doesn't seem to be any way
+#to get our server stuff into that we fork here. On the main branch we'll start the RuoteAMQP::Receiver
+#and on the child we'll start another event machine that watches directories or does whatever else
+#to kick off workflows.
+#If ultimately there is a problem with this we can go back to using loop
+pid = Kernel.fork
+if (pid)
+  RuoteAMQP::Receiver.new(engine)
+  Process.wait(pid)
+else
+  EventMachine.run do
+    EventMachine::PeriodicTimer.new(5) do
+      puts 'checking in directory'
+      Dir['in/*_ready'].each do |dir|
+        dir_name = File.basename(dir).sub(/_ready$/, '')
+        puts "launching ruote process to handle #{dir_name}"
+        engine.launch(process, 'dir' => dir_name)
+      end
+    end
   end
 end
+
