@@ -15,7 +15,7 @@ working_dir = Dir.getwd
 Daemons.run_proc('amqp-worker.rb') do
   EventMachine.run do
     Dir.chdir working_dir
-    MQ.queue('make_file_types').subscribe do |workitem|
+    MQ.queue('make_file_types', :durable => true).subscribe do |workitem|
       h = JSON.parse(workitem)
       puts "Received workitem #{workitem}:"
       puts JSON::pretty_generate(h)
@@ -39,8 +39,8 @@ Daemons.run_proc('amqp-worker.rb') do
       end
       bunny = Bunny.new
       bunny.start
-      return_queue = bunny.queue('ruote_workitems')
-      return_queue.publish(workitem)
+      return_queue = bunny.queue('ruote_workitems', :durable => true)
+      return_queue.publish(workitem, :persistent => true)
     end
   end
 end

@@ -101,6 +101,9 @@ end
 pid = Kernel.fork
 if (pid)
   RuoteAMQP::Receiver.new(engine)
+  Kernel.at_exit do
+    Process.kill('HUP', pid)
+  end
   Process.wait(pid)
 else
   EventMachine.run do
