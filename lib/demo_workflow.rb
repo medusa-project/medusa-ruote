@@ -49,7 +49,7 @@ Daemons.run_proc('demo_workflow.rb', :dir => 'pid', :log => 'log',
   if (pid)
     RuoteAMQP::Receiver.new(DemoEngine.instance.engine)
     Kernel.at_exit do
-      Process.kill('HUP', pid)
+      Process.kill('TERM', pid)
     end
     Process.wait(pid)
   else
