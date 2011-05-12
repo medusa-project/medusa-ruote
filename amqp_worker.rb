@@ -16,7 +16,7 @@ require 'fileutils'
 working_dir = Dir.getwd
 FileUtils.mkdir_p('log')
 FileUtils.mkdir_p('pid')
-Daemons.run_proc('amqp-worker.rb', :dir => 'pid', :log_dir => 'log', :backtrace => true) do
+Daemons.run_proc('amqp_worker.rb', :dir => 'pid', :log_dir => 'log', :backtrace => true) do
   EventMachine.run do
     Dir.chdir working_dir
     logger = Log4r::Logger.new('log')
