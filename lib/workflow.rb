@@ -7,22 +7,12 @@ require 'fileutils'
 require 'eventmachine'
 require 'ruote-amqp'
 require 'daemons'
-require 'lib/amqp_services/amqp_file_type_service'
-require 'lib/local_services/local_checksum_participant'
-require 'lib/local_services/move_to_out_participant'
-require 'lib/local_services/move_to_processing_participant'
+
 require 'lib/processes/demo_process'
+require 'lib/demo_engine'
 
-engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::FsStorage.new('ruote-storage')))
-
+#needed only for the demo process
 FileUtils.mkdir_p(['in', 'out', 'processing'])
-
-engine.register do
-  participant 'move_to_processing', MoveToProcessingParticipant
-  participant 'make_checksums', LocalChecksumParticipant
-  participant 'make_file_types', RuoteAMQP::ParticipantProxy, :queue => AMQPFileTypeService.amqp_listen_queue
-  participant 'move_to_out', MoveToOutParticipant
-end
 
 #Since RuoteAMQP::Receiver starts up its own event machine and there doesn't seem to be any way
 #to get our server stuff into that we fork here. On the main branch we'll start the RuoteAMQP::Receiver
@@ -47,7 +37,7 @@ end
 #with it to see if that provides any hints. 
 pid = Kernel.fork
 if (pid)
-  RuoteAMQP::Receiver.new(engine)
+  RuoteAMQP::Receiver.new(DemoEngine.instance.engine)
   Kernel.at_exit do
     Process.kill('HUP', pid)
   end
@@ -59,7 +49,7 @@ else
       Dir['in/*_ready'].each do |dir|
         dir_name = File.basename(dir).sub(/_ready$/, '')
         puts "launching ruote process to handle #{dir_name}"
-        engine.launch(DemoProcess.process, 'dir' => dir_name)
+        DemoEngine.instance.engine.launch(DemoProcess.process, 'dir' => dir_name)
       end
     end
   end
