@@ -10,6 +10,7 @@ require 'ruote-amqp'
 require 'yajl'
 require 'yajl/json_gem'
 require 'daemons'
+require 'amqp_file_type_service'
 
 engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::FsStorage.new('ruote-storage')))
 
@@ -64,7 +65,7 @@ end
 engine.register do
   participant 'move_to_processing', MoveToProcessingParticipant
   participant 'make_checksums', LocalChecksumParticipant
-  participant 'make_file_types', RuoteAMQP::ParticipantProxy, :queue => 'make_file_types'
+  participant 'make_file_types', RuoteAMQP::ParticipantProxy, :queue => AMQPFileTypeService.amqp_listen_queue
   participant 'move_to_out', MoveToOutParticipant
 end
 

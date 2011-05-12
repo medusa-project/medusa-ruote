@@ -9,6 +9,9 @@ require 'daemons'
 require 'fileutils'
 
 class AbstractAMQPService < Object
+
+  attr_accessor :logger
+
   def start
     working_dir = Dir.getwd
     ensure_log_and_pid_dirs()
@@ -41,8 +44,6 @@ class AbstractAMQPService < Object
     end
   end
 
-  attr_accessor :logger
-
   def setup_logger
     self.logger = Log4r::Logger.new('log')
     outputter = Log4r::RollingFileOutputter.new('log', :filename => File.join('log', self.service_name),
@@ -53,6 +54,14 @@ class AbstractAMQPService < Object
 
   def service_name
     raise RuntimeError, 'Subclass responsibility'
+  end
+
+  def self.amqp_listen_queue
+    raise RuntimeError, "Subclass responsibility"
+  end
+
+  def amqp_listen_queue
+    self.class.amqp_listen_queue
   end
 
   def process_name
