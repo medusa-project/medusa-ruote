@@ -1,0 +1,23 @@
+To run a small demo, run the start-demo.sh script.
+
+This will create three data directories, 'in', 'out', and 'processing', as well
+as a 'ruote-storage' directory for the workflow processing.
+It starts two daemons. One watches the in directory for new subdirectories
+eligible for processing and receives messages from remote amqp participants.
+The other is a service that is a remote amqp participant.
+
+It then copies the 'test-items' directory into 'in' and changes its name
+to 'test-items_ready', which signals that it is ready for processing.
+
+The daemons will then do the following:
+
+1. Notice that there is a processable directory in 'in'
+2. Move it to 'processing'
+3. Add a file with checksums for each original file.
+4. Add a file with file type for each original file (and the checksum file)
+5. Finish processing by moving the directory to 'out'
+
+So after a few seconds you should be able to look in 'out/test-items' and
+see all this.
+
+To stop the daemons, run the stop-demo.sh script.
