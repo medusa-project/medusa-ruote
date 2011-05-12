@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'open3'
-require 'abstract_amqp_service'
+require 'lib/amqp_services/abstract_amqp_service'
 
 class AMQPFileTypeService < AbstractAMQPService
 
@@ -15,21 +15,19 @@ class AMQPFileTypeService < AbstractAMQPService
 
   def process_workitem(workitem)
     with_parsed_workitem(workitem) do |h|
+      logger.info("Processing wfid: #{h['fei']['wfid']}")
       dir = h['fields']['dir']
       types = Dir[File.join('processing', dir, '*')].collect do |filename|
         nil if ['.', '..'].include?(filename)
         filetype = Open3.popen3('file', '-b', filename) do |stdin, stdout, stderr|
           stdout.read
         end
-        #filetype = `file -b #{filename}`
         [File.basename(filename), filetype]
       end
       File.open(File.join('processing', dir, 'file_types'), 'w') do |f|
-        self.logger.info "File info:"
         types.each do |file_info|
           name, type = *file_info
           output = "#{name}:\t#{type}"
-          self.logger.info output
           f.puts(output)
         end
       end
