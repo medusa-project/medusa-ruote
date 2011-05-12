@@ -39,8 +39,7 @@ class AbstractAMQPService < Object
 
   def listen
     MQ.queue(self.amqp_listen_queue, :durable => true).subscribe do |workitem|
-      h = process_workitem(JSON.parse(workitem))
-      self.reply_to_engine(h || workitem)
+      self.reply_to_engine(process_workitem(workitem))
     end
   end
 
@@ -77,11 +76,11 @@ class AbstractAMQPService < Object
   end
 
   #Override in subclasses to do the work for each message received.
-  #Receives the workitem parsed into a Ruby hash.
-  #Should return a Ruby hash to be turned back into a JSON work item
-  #that has any needed modifications done to it.
-  #If there is no needed modification you can return false and
-  #the original workitem will be returned
+  #Receives the workitem. Use with_parsed_workitem to get a Ruby hash.
+  #Should return either:
+  #false - in this case the original workitem is sent back
+  #a hash - in this case the hash is converted to JSON and sent back
+  #a JSON string - in this case the string is sent back as is
   def process_workitem(h)
     h
   end
@@ -93,11 +92,19 @@ class AbstractAMQPService < Object
   #Take the workitem (as a hash or a JSON string) and return it to
   #the workflow engine
   def reply_to_engine(workitem)
-    workitem = workitem.to_json if workitem.is_a?(Hash)
     bunny = Bunny.new
     bunny.start
     return_queue = bunny.queue(self.amqp_return_queue, :durable => true)
-    return_queue.publish(workitem, :persistent => true)
+    return_queue.publish(canonicalize_return_workitem(workitem),
+                         :persistent => true)
+  end
+
+  def with_parsed_workitem(workitem)
+    yield JSON.parse(workitem)
+  end
+
+  def canonicalize_return_workitem(workitem)
+    workitem.is_a?(Hash) ? workitem.to_json : workitem
   end
 
 end
