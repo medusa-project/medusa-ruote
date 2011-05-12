@@ -34,22 +34,33 @@ FileUtils.mkdir_p(['in', 'out', 'processing'])
 #may be solved).
 #It may also be some other sort of problem with Daemons - there's a lot of fiddly stuff you need to make
 #sure you get right involving the working directory, streams, etc. I need to review some other stuff I've done
-#with it to see if that provides any hints. 
-pid = Kernel.fork
-if (pid)
-  RuoteAMQP::Receiver.new(DemoEngine.instance.engine)
-  Kernel.at_exit do
-    Process.kill('HUP', pid)
-  end
-  Process.wait(pid)
-else
-  EventMachine.run do
-    EventMachine::PeriodicTimer.new(5) do
-      puts 'checking in directory'
-      Dir['in/*_ready'].each do |dir|
-        dir_name = File.basename(dir).sub(/_ready$/, '')
-        puts "launching ruote process to handle #{dir_name}"
-        DemoEngine.instance.engine.launch(DemoProcess.process, 'dir' => dir_name)
+#with it to see if that provides any hints.
+
+#The following works except that Daemons writes the pid of
+#the first half of the fork and can stop it, but it
+#doesn't seem to be able to kill the other half.
+#If we can figure out how to do this we should be set here.
+
+working_dir = Dir.getwd
+Daemons.run_proc('demo_workflow.rb', :dir => 'pid', :log => 'log',
+                 :backtrace => true) do
+  Dir.chdir(working_dir)
+  pid = Kernel.fork
+  if (pid)
+    RuoteAMQP::Receiver.new(DemoEngine.instance.engine)
+    Kernel.at_exit do
+      Process.kill('HUP', pid)
+    end
+    Process.wait(pid)
+  else
+    EventMachine.run do
+      EventMachine::PeriodicTimer.new(5) do
+        puts 'checking in directory'
+        Dir['in/*_ready'].each do |dir|
+          dir_name = File.basename(dir).sub(/_ready$/, '')
+          puts "launching ruote process to handle #{dir_name}"
+          DemoEngine.instance.engine.launch(DemoProcess.process, 'dir' => dir_name)
+        end
       end
     end
   end
