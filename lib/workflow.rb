@@ -6,13 +6,12 @@ require 'ruote/storage/fs_storage'
 require 'fileutils'
 require 'eventmachine'
 require 'ruote-amqp'
-require 'yajl'
-require 'yajl/json_gem'
 require 'daemons'
 require 'lib/amqp_services/amqp_file_type_service'
 require 'lib/local_services/local_checksum_participant'
 require 'lib/local_services/move_to_out_participant'
 require 'lib/local_services/move_to_processing_participant'
+require 'lib/processes/demo_process'
 
 engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::FsStorage.new('ruote-storage')))
 
@@ -23,15 +22,6 @@ engine.register do
   participant 'make_checksums', LocalChecksumParticipant
   participant 'make_file_types', RuoteAMQP::ParticipantProxy, :queue => AMQPFileTypeService.amqp_listen_queue
   participant 'move_to_out', MoveToOutParticipant
-end
-
-process = Ruote.process_definition do
-  sequence do
-    move_to_processing
-    make_checksums
-    make_file_types
-    move_to_out
-  end
 end
 
 #Since RuoteAMQP::Receiver starts up its own event machine and there doesn't seem to be any way
@@ -69,7 +59,7 @@ else
       Dir['in/*_ready'].each do |dir|
         dir_name = File.basename(dir).sub(/_ready$/, '')
         puts "launching ruote process to handle #{dir_name}"
-        engine.launch(process, 'dir' => dir_name)
+        engine.launch(DemoProcess.process, 'dir' => dir_name)
       end
     end
   end
