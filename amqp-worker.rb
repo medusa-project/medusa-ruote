@@ -10,15 +10,23 @@ require 'yajl'
 require 'yajl/json_gem'
 require 'open3'
 require 'daemons'
+require 'log4r'
+require 'fileutils'
 
 working_dir = Dir.getwd
-Daemons.run_proc('amqp-worker.rb') do
+FileUtils.mkdir_p('log')
+FileUtils.mkdir_p('pid')
+Daemons.run_proc('amqp-worker.rb', :dir => 'pid', :log_dir => 'log', :backtrace => true) do
   EventMachine.run do
     Dir.chdir working_dir
+    logger = Log4r::Logger.new('log')
+    logger.outputters = outputter = Log4r::RollingFileOutputter.new('log', :filename => 'log/amqp-worker', :maxtime => (3600 * 24), :max_backups => 6)
+    outputter.formatter = Log4r::PatternFormatter.new(:pattern => "%d [%5l] %M")
+    logger.info "Started"
     MQ.queue('make_file_types', :durable => true).subscribe do |workitem|
       h = JSON.parse(workitem)
-      puts "Received workitem #{workitem}:"
-      puts JSON::pretty_generate(h)
+      logger.info "Received workitem #{workitem}:"
+      logger.info JSON::pretty_generate(h)
       dir = h['fields']['dir']
       types = Dir[File.join('processing', dir, '*')].collect do |filename|
         nil if ['.', '..'].include?(filename)
@@ -29,11 +37,11 @@ Daemons.run_proc('amqp-worker.rb') do
         [File.basename(filename), filetype]
       end
       File.open(File.join('processing', dir, 'file_types'), 'w') do |f|
-        puts "File info:"
+        logger.info "File info:"
         types.each do |file_info|
           name, type = *file_info
           output = "#{name}:\t#{type}"
-          puts output
+          logger.info output
           f.puts(output)
         end
       end
@@ -41,6 +49,9 @@ Daemons.run_proc('amqp-worker.rb') do
       bunny.start
       return_queue = bunny.queue('ruote_workitems', :durable => true)
       return_queue.publish(workitem, :persistent => true)
+    end
+    Kernel.at_exit do
+      logger.info "Stopped"
     end
   end
 end

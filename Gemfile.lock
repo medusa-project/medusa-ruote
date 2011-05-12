@@ -8,6 +8,7 @@ GEM
     eventmachine (0.12.10)
     file-tail (1.0.5)
       spruz (>= 0.1.0)
+    log4r (1.1.9)
     ruby2ruby (1.2.5)
       ruby_parser (~> 2.0)
       sexp_processor (~> 3.0)
@@ -50,6 +51,7 @@ DEPENDENCIES
   bunny
   daemons
   eventmachine
+  log4r
   ruote
   ruote-amqp
   yajl-ruby
