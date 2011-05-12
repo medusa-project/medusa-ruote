@@ -1,3 +1,5 @@
 class AbstractAMQPService < Object
 
+
+
 end
