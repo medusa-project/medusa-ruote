@@ -14,8 +14,8 @@ require 'daemons'
 working_dir = Dir.getwd
 Daemons.run_proc('amqp-worker.rb') do
   EventMachine.run do
+    Dir.chdir working_dir
     MQ.queue('make_file_types').subscribe do |workitem|
-      Dir.chdir working_dir
       h = JSON.parse(workitem)
       puts "Received workitem #{workitem}:"
       puts JSON::pretty_generate(h)
