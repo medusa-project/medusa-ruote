@@ -9,6 +9,7 @@ GEM
     file-tail (1.0.5)
       spruz (>= 0.1.0)
     log4r (1.1.9)
+    macaddr (1.0.0)
     ruby2ruby (1.2.5)
       ruby_parser (~> 2.0)
       sexp_processor (~> 3.0)
@@ -41,6 +42,8 @@ GEM
       sexp_processor (>= 3.0.5)
     spruz (0.2.6)
     tzinfo (0.3.27)
+    uuid (2.3.2)
+      macaddr (~> 1.0)
     yajl-ruby (0.8.2)
 
 PLATFORMS
@@ -54,4 +57,5 @@ DEPENDENCIES
   log4r
   ruote
   ruote-amqp
+  uuid
   yajl-ruby
