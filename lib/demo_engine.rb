@@ -2,6 +2,7 @@ require 'ruote'
 require 'ruote-amqp'
 require 'singleton'
 require 'lib/amqp_services/amqp_file_type_service'
+require 'lib/amqp_services/amqp_initial_ingest_service'
 require 'lib/local_services/local_checksum_participant'
 require 'lib/local_services/move_to_out_participant'
 require 'lib/local_services/move_to_processing_participant'
@@ -21,6 +22,7 @@ class DemoEngine
       participant 'make_checksums', LocalChecksumParticipant
       participant 'make_file_types', RuoteAMQP::ParticipantProxy, :queue => AMQPFileTypeService.amqp_listen_queue
       participant 'move_to_out', MoveToOutParticipant
+      participant 'initial_ingest', RuoteAMQP::ParticipantProxy, :queue => AMQPInitialIngestService.amqp_listen_queue
     end
   end
 end
