@@ -15,11 +15,19 @@ class AMQPInitialIngestService < AbstractAMQPService
   def process_workitem(workitem)
     with_parsed_workitem(workitem) do |h|
       #generate uuid for object
+      uuid = UUID.generate
       #add uuid to workitem
-      #create fedora object
+      h['fields']['uuid'] = uuid
+      #create fedora object using uuid
+
       #import available streams (How do we recognize the image?
       #By looking in the marc? Is the marc itself named via convention?)
-      #return
+      #for now perhaps do something very simple
+      #note that presumably we got the object directory in the workitem, so we can
+      #actually find it.
+      
+      #return modified workitem
+      return h
     end
   end
 end
