@@ -1,0 +1,45 @@
+﻿<mods version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd" xmlns="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <titleInfo>
+    <nonSort>Le </nonSort>
+    <title>petit atlas maritime</title>
+    <subTitle>recueil de cartes et plans des quatre parties du monde</subTitle>
+  </titleInfo>
+  <name type="personal" usage="primary">
+    <namePart>Bellin, Jacques Nicolas</namePart>
+    <namePart type="date">1703-1772</namePart>
+  </name>
+  <typeOfResource>text</typeOfResource>
+  <originInfo>
+    <place>
+      <placeTerm type="code" authority="marccountry">fr</placeTerm>
+    </place>
+    <place>
+      <placeTerm type="text">Paris]</placeTerm>
+    </place>
+    <dateIssued>1764</dateIssued>
+    <issuance>monographic</issuance>
+    <frequency>Bimonthly</frequency>
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b" type="code">fre</languageTerm>
+  </language>
+  <physicalDescription>
+    <form authority="marcform">print</form>
+    <extent>5 v. maps (part double) 35 cm.</extent>
+  </physicalDescription>
+  <tableOfContents>v. 1. L'Amérique Septentrionale et les isles Antilles.--v. 2. L'Amérique Méridionale et ses détails.--v. 3. I. L'Asie. II. L'Afrique.--v. 4. L'Europe et les divers états qu'elle renferme excepté la France.--v. 5. Les costes de France et les places maritime sur l'oceán et sur la Méditerranée.</tableOfContents>
+  <subject authority="lcsh">
+    <topic>Atlases</topic>
+  </subject>
+  <identifier type="lccn">01017922</identifier>
+  <identifier type="oclc">ocm03662221</identifier>
+  <recordInfo>
+    <recordContentSource authority="marcorg">DLC</recordContentSource>
+    <recordCreationDate encoding="marc">780223</recordCreationDate>
+    <recordChangeDate encoding="iso8601">20020415165513.0</recordChangeDate>
+    <recordIdentifier>4231937</recordIdentifier>
+    <recordOrigin>Converted from MARCXML to MODS version 3.4 using MARC21slim2MODS3-4.xsl
+				(Revision 1.70)</recordOrigin>
+  </recordInfo>
+</mods>
+<!-- @attr 3=1 @attr 1=13 "912B41P" -->
