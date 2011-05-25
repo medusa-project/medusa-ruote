@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/medusa-project/bagit.git
+  revision: a73aa5a10919fc9c3eb5bb6db522962772c5ddf8
+  specs:
+    bagit (0.1.0)
+      semver (~> 0.1.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -48,10 +55,10 @@ GEM
       sexp_processor (~> 3.0)
     ruby_parser (2.0.6)
       sexp_processor (~> 3.0)
-    rufus-cloche (0.1.21)
-      rufus-json (>= 0.2.5)
+    rufus-cloche (1.0.1)
+      rufus-json (>= 0.2.7)
     rufus-dollar (1.0.4)
-    rufus-json (0.2.5)
+    rufus-json (1.0.0)
     rufus-mnemo (1.2.0)
     rufus-scheduler (2.0.9)
       tzinfo (>= 0.3.23)
@@ -68,6 +75,7 @@ GEM
     ruote-amqp (2.2.0)
       amqp (= 0.7.0)
       ruote (>= 2.2.0)
+    semver (0.1.0)
     sexp_processor (3.0.5)
     solr-ruby (0.0.8)
     solrizer (1.0.4)
@@ -85,7 +93,7 @@ GEM
       file-tail (>= 1.0.5)
       ruby2ruby (>= 1.2.5)
       sexp_processor (>= 3.0.5)
-    spruz (0.2.6)
+    spruz (0.2.7)
     stomp (1.1.8)
     tzinfo (0.3.27)
     uuid (2.3.2)
@@ -99,11 +107,13 @@ PLATFORMS
 DEPENDENCIES
   active-fedora
   amqp
+  bagit!
   bunny
   daemons
   eventmachine
   log4r
   ruote
   ruote-amqp
+  semver
   uuid
   yajl-ruby

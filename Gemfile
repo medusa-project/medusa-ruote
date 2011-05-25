@@ -10,3 +10,8 @@ gem 'daemons'
 gem 'log4r'
 gem 'uuid'
 gem 'active-fedora'
+gem 'semver'
+
+gem 'bagit', :git =>
+    "git://github.com/medusa-project/bagit.git"
+
