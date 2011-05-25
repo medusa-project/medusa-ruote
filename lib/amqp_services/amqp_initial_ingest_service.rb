@@ -1,6 +1,7 @@
 require 'lib/amqp_services/abstract_amqp_service'
 require 'uuid'
 require 'active-fedora'
+require 'bagit'
 
 class AMQPInitialIngestService < AbstractAMQPService
 
@@ -14,6 +15,17 @@ class AMQPInitialIngestService < AbstractAMQPService
 
   def process_workitem(workitem)
     with_parsed_workitem(workitem) do |h|
+
+      #create at new bag
+      bag = Bag.new(h['fields']['dir'])
+
+      #validate
+      unless bag.valid?
+        logger.error("Invalid bag at: #{h['fields']['dir']}")
+        h['fields']['errors'] << "Invalid bag at: #{h['fields']['dir']}"
+        return h
+      end
+
       #generate uuid for object
       uuid = UUID.generate
       #add uuid to workitem
