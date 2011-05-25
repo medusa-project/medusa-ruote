@@ -1,4 +1,5 @@
 require 'lib/amqp_services/abstract_amqp_service'
+require 'lib/utils/luhn'
 require 'uuid'
 require 'active-fedora'
 
@@ -15,7 +16,7 @@ class AMQPInitialIngestService < AbstractAMQPService
   def process_workitem(workitem)
     with_parsed_workitem(workitem) do |h|
       #generate uuid for object
-      uuid = UUID.generate
+      uuid = Luhn.add_check_character(UUID.generate)
       #add uuid to workitem
       h['fields']['uuid'] = uuid
       #create fedora object using uuid
