@@ -15,3 +15,5 @@ gem 'semver'
 gem 'bagit', :git =>
     "git://github.com/medusa-project/bagit.git"
 
+gem 'rspec'
+gem 'rake'
