@@ -15,7 +15,7 @@ class AMQPInitialIngestService < AbstractAMQPService
 
   def process_workitem(workitem)
     with_parsed_workitem(workitem) do |h|
-      #generate uuid for object
+      #generate uuid for objectge
       uuid = Luhn.add_check_character(UUID.generate)
       #add uuid to workitem
       h['fields']['uuid'] = uuid
