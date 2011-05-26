@@ -1,11 +1,10 @@
-require 'lib/amqp_services/abstract_amqp_service'
+require 'lib/amqp_services/abstract_fedora_amqp_service'
 require 'lib/utils/luhn'
 require 'uuid'
-require 'active-fedora'
 require 'bagit'
 require 'medusa'
 
-class AMQPInitialIngestService < AbstractAMQPService
+class AMQPInitialIngestService < AbstractFedoraAMQPService
 
   def service_name
     'amqp_initial_ingest_service'
@@ -50,20 +49,6 @@ class AMQPInitialIngestService < AbstractAMQPService
       #return modified workitem
       return h
     end
-  end
-
-  #If there is an object with the given pid delete it and yield to the block.
-  #For making this repeatable without hassle.
-  #
-  #@param [String] pid Fedora object identifier
-  def replacing_object(pid)
-    begin
-      object = ActiveFedora::Base.find(pid)
-      object.delete unless object.nil?
-    rescue ActiveFedora::ObjectNotFoundError
-      #nothing
-    end
-    yield
   end
 
 end

@@ -7,6 +7,7 @@ require 'bunny'
 require 'mq'
 require 'daemons'
 require 'fileutils'
+require 'lib/utils/fedora_utils'
 
 class AbstractAMQPService < Object
 

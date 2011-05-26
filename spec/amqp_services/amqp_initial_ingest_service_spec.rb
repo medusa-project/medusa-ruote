@@ -3,7 +3,7 @@ require 'lib/amqp_services/amqp_initial_ingest_service'
 
 describe AMQPInitialIngestService do
 
-  it { should be_a(AbstractAMQPService) }
+  it { should be_a(AbstractFedoraAMQPService) }
 
   it "should listen to the initial_ingest_service queue" do
     AMQPInitialIngestService.amqp_listen_queue.should == 'initial_ingest_service'
