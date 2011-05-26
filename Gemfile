@@ -14,6 +14,8 @@ gem 'semver'
 
 gem 'bagit', :git =>
     "git://github.com/medusa-project/bagit.git"
+#this seems to be used by bagit but isn't getting installed
+gem 'validatable'
 
 gem 'rspec'
 gem 'rake'

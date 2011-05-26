@@ -119,6 +119,7 @@ GEM
     tzinfo (0.3.27)
     uuid (2.3.2)
       macaddr (~> 1.0)
+    validatable (1.6.7)
     xml-simple (1.0.15)
     yajl-ruby (0.8.2)
 
@@ -141,4 +142,5 @@ DEPENDENCIES
   ruote-amqp
   semver
   uuid
+  validatable
   yajl-ruby
