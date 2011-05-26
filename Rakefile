@@ -9,5 +9,5 @@ RSpec::Core::RakeTask.new(:spec_rcov) do |t|
   t.rcov = true
 end
 Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = '--format pretty'
+  t.cucumber_opts = '--format pretty --color'
 end
