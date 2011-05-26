@@ -1,0 +1,31 @@
+﻿<mods version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd" xmlns="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <titleInfo>
+    <title>AFRIQUE</title>
+  </titleInfo>
+  <name type="personal" usage="primary">
+    <namePart>MAIRE, A. P.</namePart>
+  </name>
+  <typeOfResource>text</typeOfResource>
+  <originInfo>
+    <place>
+      <placeTerm type="code" authority="marccountry">xx</placeTerm>
+    </place>
+    <issuance>monographic</issuance>
+    <frequency />
+  </originInfo>
+  <language>
+    <languageTerm authority="iso639-2b" type="code">eng</languageTerm>
+  </language>
+  <physicalDescription>
+    <form authority="marcform">print</form>
+  </physicalDescription>
+  <recordInfo>
+    <recordContentSource authority="marcorg">LCS</recordContentSource>
+    <recordCreationDate encoding="marc">971122</recordCreationDate>
+    <recordChangeDate encoding="iso8601">20020415165353.0</recordChangeDate>
+    <recordIdentifier>4004473</recordIdentifier>
+    <recordOrigin>Converted from MARCXML to MODS version 3.4 using MARC21slim2MODS3-4.xsl
+				(Revision 1.70)</recordOrigin>
+  </recordInfo>
+</mods>
+<!-- @attr 3=3 @attr 1=16 "G8300182 .M3" -->

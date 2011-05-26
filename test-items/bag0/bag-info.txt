@@ -1,0 +1,3 @@
+Payload-Oxum: 20187021.2
+Bagging-Date: 2011-05-25
+Bag-Size: 19.3 MB
