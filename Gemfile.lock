@@ -52,6 +52,7 @@ GEM
       nokogiri (>= 1.4.2)
       om
     rake (0.9.0)
+    rcov (0.9.9)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)
       rspec-expectations (~> 2.6.0)
@@ -123,6 +124,7 @@ DEPENDENCIES
   eventmachine
   log4r
   rake
+  rcov
   rspec
   ruote
   ruote-amqp
