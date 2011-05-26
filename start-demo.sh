@@ -1,6 +1,8 @@
 #!/bin/bash
 
-rm -rf 'in' out processing ruote-storage
+rm -rf 'in' out processing
+mkdir 'in' out processing
+
 #lib/demo_workflow.rb &
 #echo $! > demo_workflow.pid
 lib/demo_workflow.rb restart
