@@ -21,6 +21,9 @@ class AMQPInitialIngestService < AbstractFedoraAMQPService
       bag = Bag.new(h['fields']['dir'])
 
       #validate
+      #TODO this should probably do something that will indicate to the engine that
+      #the step failed. We need to research that some more - there may be an
+      #idiomatic way to do it.
       unless bag.valid?
         logger.error("Invalid bag at: #{h['fields']['dir']}")
         h['fields']['errors'] << "Invalid bag at: #{h['fields']['dir']}"
