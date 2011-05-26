@@ -18,3 +18,4 @@ gem 'bagit', :git =>
 gem 'rspec'
 gem 'rake'
 gem 'rcov'
+gem 'cucumber'
