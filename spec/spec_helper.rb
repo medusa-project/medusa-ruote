@@ -2,4 +2,5 @@
 require 'rspec'
 
 #Add root directory to load path
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..')
+PROJECT_ROOT =  File.join(File.dirname(__FILE__), '..')
+$LOAD_PATH.unshift PROJECT_ROOT
