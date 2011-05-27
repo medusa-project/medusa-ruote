@@ -4,6 +4,9 @@ require 'uuid'
 require 'bagit'
 require 'medusa'
 
+class InvalidBagError < RuntimeError;
+end
+
 class AMQPInitialIngestService < AbstractFedoraAMQPService
 
   def service_name
@@ -18,17 +21,7 @@ class AMQPInitialIngestService < AbstractFedoraAMQPService
     with_parsed_workitem(workitem) do |h|
 
       #create at new bag
-      bag = Bag.new(h['fields']['dir'])
-
-      #validate
-      #TODO this should probably do something that will indicate to the engine that
-      #the step failed. We need to research that some more - there may be an
-      #idiomatic way to do it.
-      unless bag.valid?
-        logger.error("Invalid bag at: #{h['fields']['dir']}")
-        h['fields']['errors'] << "Invalid bag at: #{h['fields']['dir']}"
-        return h
-      end
+      bag = extract_bag(h['fields']['dir'])
 
       #generate uuid for object
       uuid = Luhn.add_check_character(UUID.generate)
@@ -43,7 +36,7 @@ class AMQPInitialIngestService < AbstractFedoraAMQPService
         #add datastreams from the bag
         bag.bag_files.each do |f|
           filename = File.basename(f)
-          ds       = ActiveFedora::Datastream.new(:dsLabel => filename, :controlGroup => "M", :blob => File.open(f))
+          ds = ActiveFedora::Datastream.new(:dsLabel => filename, :controlGroup => "M", :blob => File.open(f))
           item.add_datastream ds
         end
         item.save
@@ -51,8 +44,27 @@ class AMQPInitialIngestService < AbstractFedoraAMQPService
 
       #return modified workitem
       return h
+
+      #TODO this should probably do something that will indicate to the engine that
+      #the step failed. We need to research that some more - there may be an
+      #idiomatic way to do it.
+      rescue InvalidBagError => e
+      h['fields']['errors'] << "#{e.class}: #{e.message}"
+      return h
     end
   end
+
+  #create a Bag, throwing an exception if there is a problem with the incoming package
+  def extract_bag(dir)
+    bag = Bag.new(dir)
+    unless bag.valid?
+      message = "Invalid bag at: #{dir}"
+      logger.error(message)
+      raise InvalidBagError, message
+    end
+    return bag
+  end
+
 
 end
 
