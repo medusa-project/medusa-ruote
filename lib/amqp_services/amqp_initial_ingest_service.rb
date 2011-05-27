@@ -29,18 +29,8 @@ class AMQPInitialIngestService < AbstractFedoraAMQPService
       #add uuid to workitem
       h['fields']['uuid'] = uuid
 
-      #create fedora object using uuid
-      replacing_object(uuid) do
-        item = Medusa::BasicImage.new(:pid => uuid)
-
-        #add datastreams from the bag
-        bag.bag_files.each do |f|
-          filename = File.basename(f)
-          ds = ActiveFedora::Datastream.new(:dsLabel => filename, :controlGroup => "M", :blob => File.open(f))
-          item.add_datastream ds
-        end
-        item.save
-      end
+      #use bag to create fedora object of type Medusa::BasicImage using uuid
+      bag_to_fedora_object(bag, uuid, Medusa::BasicImage)
 
       #return modified workitem
       return h
@@ -50,6 +40,10 @@ class AMQPInitialIngestService < AbstractFedoraAMQPService
       #idiomatic way to do it.
       rescue InvalidBagError => e
       h['fields']['errors'] << "#{e.class}: #{e.message}"
+      return h
+      #TODO we should rescue other errors, say if making the fedora object fails
+      rescue Exception => e
+      h['fields']['errors'] << "#{e.class} #{e.message}"
       return h
     end
   end
@@ -64,7 +58,6 @@ class AMQPInitialIngestService < AbstractFedoraAMQPService
     end
     return bag
   end
-
 
 end
 

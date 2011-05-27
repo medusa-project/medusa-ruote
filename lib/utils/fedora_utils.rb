@@ -17,4 +17,19 @@ module FedoraUtils
     yield
   end
 
+  #add each data file in the bag to a fedora object with the given uuid and ActiveFedora::Base subclass
+  def bag_to_fedora_object(bag, uuid, fedora_class)
+    replacing_object(uuid) do
+      item = fedora_class.new(:pid => uuid)
+
+      #add datastreams from the bag
+      bag.bag_files.each do |f|
+        filename = File.basename(f)
+        ds = ActiveFedora::Datastream.new(:dsLabel => filename, :controlGroup => "M", :blob => File.open(f))
+        item.add_datastream ds
+      end
+      item.save
+    end
+  end
+
 end
