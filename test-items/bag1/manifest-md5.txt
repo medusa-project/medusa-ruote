@@ -1,2 +1,2 @@
 ba337d6af51abb5c024ed8ec83e64801  data/afm0000158.jp2
-68d1ce6f0ad2d467edce1e7551362021  data/marc.xml
+ca244920e774c60be6caf80e15ec73be  data/marc.xml
