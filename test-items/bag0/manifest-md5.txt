@@ -1,2 +1,2 @@
 ded554dcd36bb3285da2cbe3e5b2fd60  data/afm0000092.jp2
-79683c3a79767adf50e1315419c17f76  data/marc.xml
+19039b8f1813b1c59e10b93e9a8f6fd6  data/marc.xml
