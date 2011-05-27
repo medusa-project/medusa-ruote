@@ -13,6 +13,13 @@ class AbstractAMQPService < Object
 
   attr_accessor :logger
 
+  def initialize(params = {})
+    #this is a bit kludgy, but until the service actually starts up use a stdout logger
+    #may be useful for testing
+    self.logger = Log4r::Logger.new 'stdout'
+    self.logger.outputters = Log4r::Outputter.stdout
+  end
+
   def start
     working_dir = Dir.getwd
     ensure_log_and_pid_dirs()
