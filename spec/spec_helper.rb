@@ -1,6 +1,7 @@
 #This file is for code to help conduct spec tests
 require 'rspec'
 require 'active-fedora'
+require 'set'
 
 #Add root directory to load path
 PROJECT_ROOT =  File.join(File.dirname(__FILE__), '..')
