@@ -12,7 +12,7 @@ class DemoEngine
   attr_accessor :engine
 
   def initialize
-    self.engine = engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::FsStorage.new('ruote-storage')))
+    self.engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::FsStorage.new('ruote-storage')))
     self.register_participants
   end
 
