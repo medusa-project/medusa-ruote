@@ -1,11 +1,11 @@
 require 'ruote'
 require 'ruote-amqp'
 require 'singleton'
-require 'lib/amqp_services/amqp_file_type_service'
-require 'lib/amqp_services/amqp_initial_ingest_service'
-require 'lib/local_services/local_checksum_participant'
-require 'lib/local_services/move_to_out_participant'
-require 'lib/local_services/move_to_processing_participant'
+require 'lib/demo/services/amqp_file_type_service'
+require 'lib/services/amqp_initial_ingest_service'
+require 'lib/demo/services/local_checksum_participant'
+require 'lib/demo/services/move_to_out_participant'
+require 'lib/demo/services/move_to_processing_participant'
 
 class DemoEngine
   include Singleton

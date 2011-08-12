@@ -1,4 +1,4 @@
-To run a small demo, run the start-demo.sh script.
+To run a small demo, run the start-demo.sh script from the top level of the project.
 
 This will create three data directories, 'in', 'out', and 'processing', as well
 as a 'ruote-storage' directory for the workflow processing.

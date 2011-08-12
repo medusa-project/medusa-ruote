@@ -8,8 +8,8 @@ require 'eventmachine'
 require 'ruote-amqp'
 require 'daemons'
 
-require 'lib/processes/demo_process'
-require 'lib/demo_engine'
+require 'lib/demo/demo_process'
+require 'lib/demo/demo_engine'
 
 #needed only for the demo process
 FileUtils.mkdir_p(['in', 'out', 'processing'])
