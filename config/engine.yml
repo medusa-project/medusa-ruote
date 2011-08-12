@@ -1,0 +1,4 @@
+#configuration for medusa's Ruote engine
+
+#location of the storage
+storage_directory: medusa-ruote-storage

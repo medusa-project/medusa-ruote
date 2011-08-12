@@ -2,15 +2,19 @@
 require 'singleton'
 require 'ruote'
 require 'ruote-amqp'
+require 'ruote/storage/fs_storage'
 
 class MedusaEngine
-  require 'singleton'
-  attr_accessor :engine
+  include Singleton
+  attr_accessor :engine, :config
 
   def initialize
-    self.engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::FsStorage.new('medusa-ruote-storage')))
+    read_config
+    self.engine = Ruote::Engine.new(Ruote::Worker.new(Ruote::FsStorage.new(self.config['storage_directory'])))
     self.register_participants
   end
+
+  protected
 
   #List all available participants here
   def register_participants
@@ -18,4 +22,9 @@ class MedusaEngine
 
     end
   end
+
+  def read_config
+    self.config = YAML.load_file('config/engine.yml')
+  end
+
 end

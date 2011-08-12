@@ -10,29 +10,37 @@ require 'eventmachine'
 
 require 'lib/engine'
 
-#How often (in seconds) to check for new processes startup.
-#In production this can probably be raised a bit, but a short
-#time will be better for development.
-POLL_FREQUENCY = 5
+class MedusaServer
 
-working_dir = Dir.getwd
-Daemons.run_proc('medusa_server.rb', :dir => 'pid', :log => 'log',
-                 :backtrace => true) do
-  Dir.chdir(working_dir)
-  pid = Kernel.fork
-  if (pid)
-    RuoteAMQP::Receiver.new(Engine.instance.engine)
-    Kernel.at_exit do
-      Process.kill('TERM', pid)
-    end
-    Process.wait(pid)
-  else
-    EventMachine.run do
-      EventMachine::PeriodicTimer.new(POLL_FREQUENCY) do
-        #check to see if any processes need to be launched
-        #if so, launch them
-        #Probably delegate to a process launcher object
+  attr_accessor :config
+
+  def start
+    working_dir = Dir.getwd
+    read_config(working_dir)
+    Daemons.run_proc('medusa_server.rb', :dir => 'pid', :log => 'log',
+                     :backtrace => true) do
+      Dir.chdir(working_dir)
+      pid = Kernel.fork
+      if (pid)
+        RuoteAMQP::Receiver.new(MedusaEngine.instance.engine)
+        Kernel.at_exit do
+          Process.kill('TERM', pid)
+        end
+        Process.wait(pid)
+      else
+        EventMachine.run do
+          EventMachine::PeriodicTimer.new(self.config['poll_frequency'].to_i) do
+            #check to see if any processes need to be launched
+            #if so, launch them
+            #Probably delegate to a process launcher object
+          end
+        end
       end
     end
   end
+
+  def read_config(base_dir)
+    self.config = YAML.load_file(File.join(base_dir, 'config', 'server.yml'))
+  end
+
 end
