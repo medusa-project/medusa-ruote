@@ -20,7 +20,7 @@ FileUtils.mkdir_p(['in', 'out', 'processing'])
 #open it up inside the Daemons.run_proc call (e.g. a logger,
 #the engine stuff, etc.).
 working_dir = Dir.getwd
-Daemons.run_proc('demo_workflow.rb', :dir => 'pid', :log => 'log',
+Daemons.run_proc('demo_server.rb', :dir => 'pid', :log => 'log',
                  :backtrace => true) do
   Dir.chdir(working_dir)
   pid = Kernel.fork
