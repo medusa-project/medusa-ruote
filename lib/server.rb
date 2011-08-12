@@ -33,6 +33,14 @@ class MedusaServer
             #check to see if any processes need to be launched
             #if so, launch them
             #Probably delegate to a process launcher object
+            #I think for now this will be a two step process (maybe only one of
+            #which actually needs the process launcher):
+            #a) Check an incoming directory for valid bags. Move any valid bag to
+            #   a processing directory. This might need some sort of lock to prevent
+            #   us from checking the same potential bag more than once simultaneously.
+            #b) For bags in the processing directory have the process launcher
+            #   decide what to do with them and do it. Might also need some sort of
+            #   locking.
           end
         end
       end
