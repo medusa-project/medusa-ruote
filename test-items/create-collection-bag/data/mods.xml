@@ -1,0 +1,11 @@
+﻿<mods version="3.4" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/mods.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3">
+  <!--This collection mods record should be edited by hand to most accurately reflect the collection-->
+  <typeOfResource collection="yes">mixed material</typeOfResource>
+  <titleInfo>
+    <title>Maps of Africa to 1900</title>
+  </titleInfo>
+  <abstract>The Maps of Africa to 1900 digital collection contains images of maps listed in the bibliography &lt;a href='http://hdl.handle.net/10111/UIUCOCA:mapsofafricato1900bass'&gt;Maps of Africa to 1900: A Checklist of Maps in Atlases and Geographical Journals in the Collections of the University of Illinois, Urbana-Champaign&lt;/a&gt; (Bassett &amp; Scheven, Urbana: Graduate School of Library and Information Science, 2000). As such, this collection mines not only the Library�s map collections, but also its extensive collection of 19th century atlases and geographical journals, including the Journal of the Royal Geographical Society (United Kingdom), the Bulletin de la Soci�t� de G�ographie de Paris (France), and Petermanns Geographische Mittheilungen (Germany). Bassett�s and Scheven�s original bibliography lists 2,416 maps of which nearly 78 percent date from the 19th century. Africanists and historians of cartography are drawn to this century because the map of the continent changed so rapidly in the wake of European explorations, conquests, and colonization (Bassett &amp; Scheven, p. iii). About a quarter of the collection dates from the sixteenth century, 9 percent from the seventeenth, and 13 percent from the eighteenth century. The Library is digitizing as many of the maps as possible, condition permitting. Maps are added to the collection as they are completed. </abstract>
+  <location>
+    <url access="object in context" usage="primary">https://imagesearch.library.illinois.edu/cdm4/browse.php?CISOROOT=%2Fafricanmaps</url>
+  </location>
+</mods>

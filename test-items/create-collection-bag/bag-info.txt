@@ -1,0 +1,2 @@
+Bag-Software-Agent: BagIt Ruby Gem (http://bagit.rubyforge.org)
+Medusa-Process: create-collection
