@@ -2,61 +2,43 @@ require 'rubygems'
 require 'bundler/setup'
 require 'yajl'
 require 'yajl/json_gem'
-require 'log4r'
 require 'bunny'
 require 'mq'
 require 'daemons'
 require 'fileutils'
 require 'lib/utils/fedora_utils'
+require 'lib/utils/logging'
 
 class AbstractAMQPService < Object
-
-  attr_accessor :logger
+  include Logging
 
   def initialize(params = {})
     #this is a bit kludgy, but until the service actually starts up use a stdout logger
     #may be useful for testing
-    self.logger = Log4r::Logger.new 'stdout'
-    self.logger.outputters = Log4r::Outputter.stdout
+    start_stdout_logger
   end
 
   def start
     working_dir = Dir.getwd
-    ensure_log_and_pid_dirs()
+    ensure_pid_dir
     Daemons.run_proc(self.process_name, :dir => self.pid_dir,
                      :log_dir => self.log_dir, :backtrace => true) do
       EventMachine.run do
         Dir.chdir working_dir
-        start_logging()
+        start_logging(self.service_name)
         listen()
       end
     end
   end
 
-  def ensure_log_and_pid_dirs
-    [self.log_dir, self.pid_dir].each { |dir| FileUtils.mkdir_p(dir) }
-  end
-
-  def start_logging
-    self.setup_logger
-    self.logger.info "Started"
-    Kernel.at_exit do
-      self.logger.info "Stopped"
-    end
+  def ensure_pid_dir
+    FileUtils.mkdir_p(self.pid_dir)
   end
 
   def listen
     MQ.queue(self.amqp_listen_queue, :durable => true).subscribe do |workitem|
       self.reply_to_engine(process_workitem(workitem))
     end
-  end
-
-  def setup_logger
-    self.logger = Log4r::Logger.new('log')
-    outputter = Log4r::RollingFileOutputter.new('log', :filename => File.join('log', self.service_name),
-                                                :maxtime => (3600 * 24), :max_backups => 6)
-    self.logger.outputters = outputter
-    outputter.formatter = Log4r::PatternFormatter.new(:pattern => "%d [%5l] %M")
   end
 
   def service_name
@@ -73,10 +55,6 @@ class AbstractAMQPService < Object
 
   def process_name
     "#{self.service_name}.rb"
-  end
-
-  def log_dir
-    'log'
   end
 
   def pid_dir

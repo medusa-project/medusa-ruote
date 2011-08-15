@@ -12,16 +12,20 @@ require 'filescan'
 require 'lib/engine'
 require 'lib/utils/bag_utils'
 require 'lib/utils/dir_utils'
+require 'lib/utils/logging'
 
 class MedusaServer
+  include Logging
 
   attr_accessor :working_dir, :incoming_dir, :ready_dir, :processing_dir
   attr_accessor :poll_frequency, :incoming_dir_processing_delay
+  attr_accessor :logger
 
   def initialize
     self.working_dir = Dir.getwd
     read_config(working_dir)
     ensure_directories
+    start_stdout_logger
   end
 
   def start
@@ -36,9 +40,12 @@ class MedusaServer
         end
         Process.wait(pid)
       else
+        start_logging('main')
         EventMachine.run do
           start_incoming_bag_checker
+          logger.info('Started bag checker')
           start_process_launcher
+          logger.info('Started process launcher')
         end
       end
     end
