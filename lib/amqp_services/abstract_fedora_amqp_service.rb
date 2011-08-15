@@ -8,6 +8,7 @@ class AbstractFedoraAMQPService < AbstractAMQPService
 
   def startup_actions
     super
+    ENV['environment'] ||= 'development'
     ActiveFedora.init
   end
 

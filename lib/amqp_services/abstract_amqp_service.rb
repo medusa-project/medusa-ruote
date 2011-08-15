@@ -21,10 +21,16 @@ class AbstractAMQPService < Object
   def start
     working_dir = Dir.getwd
     ensure_pid_dir
+    ensure_log_dir
     Daemons.run_proc(self.process_name, :dir => self.pid_dir,
                      :log_dir => self.log_dir, :backtrace => true) do
       EventMachine.run do
         Dir.chdir working_dir
+        startup_actions
+        logger.info("Listening")
+        Kernel.at_exit do
+          logger.info("Shutting down")
+        end
         listen()
       end
     end
