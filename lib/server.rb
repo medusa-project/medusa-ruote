@@ -11,6 +11,7 @@ require 'bagit'
 require 'filescan'
 require 'lib/engine'
 require 'lib/utils/bag_utils'
+require 'lib/utils/dir_utils'
 
 class MedusaServer
 
@@ -51,7 +52,7 @@ class MedusaServer
       Filescan.new(self.incoming_dir, false, false).each_dirname do |dir_name|
         #make sure files have been unmodified for a while. Not strictly necessary, but cheaper
         #than checking the whole bag each time while it's still being copied in.
-        next unless directory_unmodified?(dir_name, self.incoming_dir_processing_delay)
+        next unless DirUtils.directory_unmodified?(dir_name, self.incoming_dir_processing_delay)
         #make sure we have a valid bag
         begin
           next unless BagUtils.extract_bag(dir_name)
@@ -65,26 +66,6 @@ class MedusaServer
         FileUtils.mv(dir_name, File.join(self.ready_dir, File.basename(dir_name)))
       end
     end
-  end
-
-  #Return true if each file (recursively) under the given directory has not been modified
-  #for <delay_time> seconds from when this function is called.
-  #If there are no files under the directory return false.
-  def directory_unmodified?(directory_name, delay_time)
-    now = Time.now
-    last = directory_last_modified(directory_name)
-    return (last and (now - last > delay_time))
-  end
-
-  #Return the latest time a file under this directory (recursively) has been modified,
-  #or nil if there are no files.
-  def directory_last_modified(directory_name)
-    last = nil
-    Filescan.new(directory_name, true, false).each_file do |file, file_name|
-      last ||= file.mtime
-      last = [last, file.mtime].max
-    end
-    return last
   end
 
   #Check the ready directory for directories.
