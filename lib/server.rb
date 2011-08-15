@@ -43,9 +43,7 @@ class MedusaServer
         start_logging('main')
         EventMachine.run do
           start_incoming_bag_checker
-          logger.info('Started bag checker')
           start_process_launcher
-          logger.info('Started process launcher')
         end
       end
     end
@@ -71,14 +69,18 @@ class MedusaServer
           #or something.
         end
         begin
-          File.rename(dir_name, File.join(self.ready_dir, File.basename(dir_name)))
+          base_name = File.basename(dir_name)
+          File.rename(dir_name, File.join(self.ready_dir, base_name))
+          logger.info("Moved bag #{base_name} to ready directory.")
         rescue SystemCallError
           #do nothing - most likely the target already exists,
           #so this will be picked up after the existing target with this name is processed
           #Still not an ideal solution, but okay for now.
+          logger.error("Unable to move bag #{bag_name} to ready directory.")
         end
       end
     end
+    logger.info('Started bag checker')
   end
 
   #Check the ready directory for directories.
@@ -88,6 +90,7 @@ class MedusaServer
     start_periodic_timer_with_mutex() do
 
     end
+    logger.info('Started process launcher')
   end
 
   #run a block under a periodic timer but with a mutex.
