@@ -21,6 +21,7 @@ class MedusaServer
   def initialize
     self.working_dir = Dir.getwd
     read_config(working_dir)
+    ensure_directories
   end
 
   def start
@@ -50,7 +51,7 @@ class MedusaServer
   def start_incoming_bag_checker
     start_periodic_timer_with_mutex() do
       Filescan.new(self.incoming_dir, false, false).each_dirname do |dir_name|
-        #make sure files have been unmodified for a while. Not strictly necessary, but cheaper
+        #Make sure files have been unmodified for a while. Not strictly necessary, but cheaper
         #than checking the whole bag each time while it's still being copied in.
         next unless DirUtils.directory_unmodified?(dir_name, self.incoming_dir_processing_delay)
         #make sure we have a valid bag
@@ -62,8 +63,13 @@ class MedusaServer
           #that have been sitting around for a long time. Perhaps email to a server admin
           #or something.
         end
-        #Here we have a good bag. Move it to the ready directory.
-        FileUtils.mv(dir_name, File.join(self.ready_dir, File.basename(dir_name)))
+        begin
+          File.rename(dir_name, File.join(self.ready_dir, File.basename(dir_name)))
+        rescue SystemCallError
+          #do nothing - most likely the target already exists,
+          #so this will be picked up after the existing target with this name is processed
+          #Still not an ideal solution, but okay for now.
+        end
       end
     end
   end
@@ -105,4 +111,9 @@ class MedusaServer
   def working_subdir(dirname)
     File.join(self.working_dir, dirname)
   end
+
+  def ensure_directories
+    FileUtils.mkdir_p([incoming_dir, ready_dir, processing_dir])
+  end
+
 end
