@@ -88,7 +88,22 @@ class MedusaServer
   #and launch the process.
   def start_process_launcher
     start_periodic_timer_with_mutex() do
+      Filescan.new(self.ready_dir, false, false).each_dirname do |dir_name|
+        bag = BagUtils.extract_bag(dir_name)
+        #check the bag for the operation to do, failing if it's not known
 
+        #move to processing - after this things are in the hands of the
+        #workflow engine and process
+        begin
+          base_name = File.basename(dir_name)
+          File.rename(dir_name, File.join(self.processing_dir, base_name))
+          logger.info("Moved bag #{base_name} to processing directory.")
+        rescue SystemCallError
+          logger.error("Unable to move bag #{bag_name} to processing directory.")
+        end
+        #start the process, passing in the processing directory
+
+      end
     end
     logger.info('Started process launcher')
   end

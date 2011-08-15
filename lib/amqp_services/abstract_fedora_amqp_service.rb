@@ -5,4 +5,10 @@ require 'active-fedora'
 
 class AbstractFedoraAMQPService < AbstractAMQPService
   include FedoraUtils
+
+  def startup_actions
+    super
+    ActiveFedora.init
+  end
+
 end

@@ -25,10 +25,15 @@ class AbstractAMQPService < Object
                      :log_dir => self.log_dir, :backtrace => true) do
       EventMachine.run do
         Dir.chdir working_dir
-        start_logging(self.service_name)
         listen()
       end
     end
+  end
+
+  #override to do additional things after daemonizing but before the server
+  #starts listening
+  def startup_actions
+    start_logging(self.service_name)
   end
 
   def ensure_pid_dir
@@ -86,7 +91,11 @@ class AbstractAMQPService < Object
   end
 
   def with_parsed_workitem(workitem)
-    yield JSON.parse(workitem)
+    if workitem.is_a?(Hash)
+      yield workitem
+    else
+      yield JSON.parse(workitem)
+    end
   end
 
   def canonicalize_return_workitem(workitem)

@@ -18,6 +18,7 @@ module FedoraUtils
   end
 
   #add each data file in the bag to a fedora object with the given uuid and ActiveFedora::Base subclass
+  #return the resulting ActiveFedora object
   def bag_to_fedora_object(bag, uuid, fedora_class)
     replacing_object(uuid) do
       item = fedora_class.new(:pid => uuid)
@@ -29,6 +30,7 @@ module FedoraUtils
         item.add_datastream ds
       end
       item.save
+      return item
     end
   end
 
