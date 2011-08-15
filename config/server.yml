@@ -1,4 +1,18 @@
 #configuration for the medusa server
 
-#in seconds
+#In seconds
 poll_frequency: 5
+incoming_directory_processing_delay: 5
+
+#directories used by the server
+#initially copy into the items_incoming directory
+#when a valid bag is detected there, it will be moved to
+#items_incoming.
+#The process launcher will look at items_incoming, decide
+#what process to launch, move the item to items_processing,
+#and launch the process.
+#The process itself is responsible for removing the item
+#files once they're ingested.
+incoming_directory: 'items_incoming'
+ready_directory: 'items_ready'
+processing_directory: 'items_processing'

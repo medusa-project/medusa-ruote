@@ -7,8 +7,10 @@ require 'bundler/setup'
 require 'ruote-amqp'
 require 'daemons'
 require 'eventmachine'
-
+require 'bagit'
+require 'filescan'
 require 'lib/engine'
+require 'lib/utils/bag_utils'
 
 class MedusaServer
 
@@ -29,26 +31,85 @@ class MedusaServer
         Process.wait(pid)
       else
         EventMachine.run do
-          EventMachine::PeriodicTimer.new(self.config['poll_frequency'].to_i) do
-            #check to see if any processes need to be launched
-            #if so, launch them
-            #Probably delegate to a process launcher object
-            #I think for now this will be a two step process (maybe only one of
-            #which actually needs the process launcher):
-            #a) Check an incoming directory for valid bags. Move any valid bag to
-            #   a processing directory. This might need some sort of lock to prevent
-            #   us from checking the same potential bag more than once simultaneously.
-            #b) For bags in the processing directory have the process launcher
-            #   decide what to do with them and do it. Might also need some sort of
-            #   locking.
-          end
+          start_incoming_bag_checker
+          start_process_launcher
         end
       end
     end
   end
 
+  protected
+
   def read_config(base_dir)
     self.config = YAML.load_file(File.join(base_dir, 'config', 'server.yml'))
+  end
+
+  #Check the incoming directory for valid bags. Move valid bags to the ready
+  #directory.
+  def start_incoming_bag_checker
+    start_periodic_timer_with_mutex() do
+      Filescan.new(self.config['incoming_directory'], false, false).each_dirname do |dir_name|
+        #make sure files have been unmodified for a while. Not strictly necessary, but cheaper
+        #than checking the whole bag each time while it's still being copied in.
+        next unless directory_unmodified?(dir_name, self.config['incoming_directory_processing_delay'])
+        #make sure we have a valid bag
+        begin
+          next unless BagUtils.extract_bag(dir_name)
+        rescue InvalidBagError
+          next
+          #TODO? At some point maybe we'll also want to report invalid bags
+          #that have been sitting around for a long time. Perhaps email to a server admin
+          #or something.
+        end
+        #Here we have a good bag. Move it to the ready directory.
+        FileUtils.mv(dir_name, File.join(self.config['ready_directory'], File.basename(dir_name)))
+      end
+    end
+  end
+
+  #Return true if each file (recursively) under the given directory has not been modified
+  #for <delay_time> seconds from when this function is called.
+  #If there are no files under the directory return false.
+  def directory_unmodified?(directory_name, delay_time)
+    now = Time.now
+    last = directory_last_modified(directory_name)
+    return (last and (now - last > delay_time))
+  end
+
+  #Return the latest time a file under this directory (recursively) has been modified,
+  #or nil if there are no files.
+  def directory_last_modified(directory_name)
+    last = nil
+    Filescan.new(directory_name, true, false).each_file do |file, file_name|
+      last ||= file.mtime
+      last = [last, file.mtime].max
+    end
+    return last
+  end
+
+  #Check the ready directory for directories.
+  #Figure out what processes to launch on each, move to processing directory,
+  #and launch the process.
+  def start_process_launcher
+    start_periodic_timer_with_mutex() do
+
+    end
+  end
+
+  #run a block under a periodic timer but with a mutex.
+  #If the timer is called but the mutex is locked then just skip the block
+  #for that iteration.
+  def start_periodic_timer_with_mutex(poll_frequency = self.config['poll_frequency'])
+    mutex = Mutex.new
+    EventMachine::PeriodicTimer.new(poll_frequency.to_i) do
+      if mutex.try_lock
+        begin
+          yield
+        ensure
+          mutex.unlock
+        end
+      end
+    end
   end
 
 end
