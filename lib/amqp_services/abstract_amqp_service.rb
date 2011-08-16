@@ -108,4 +108,9 @@ class AbstractAMQPService < Object
     workitem.is_a?(Hash) ? workitem.to_json : workitem
   end
 
+  def add_error_to_workitem(hash, error_string)
+    hash['fields']['errors'] ||= []
+    hash['fields']['errors'] << error_string
+  end
+
 end

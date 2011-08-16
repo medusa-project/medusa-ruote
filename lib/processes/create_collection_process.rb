@@ -1,6 +1,6 @@
-require 'lib/abstract_process'
+require 'lib/processes/abstract_process'
 
-def CreateCollectionProcess
+class CreateCollectionProcess
 
   def self.process_definition
     Ruote.process_definition do

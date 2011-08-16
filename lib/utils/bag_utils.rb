@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'bagit'
+
 class InvalidBagError < RuntimeError;
 end
 

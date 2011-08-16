@@ -11,7 +11,7 @@ puts "Executing main server #{action}"
 system('lib/runners/server_runner.rb', action)
 #Then run the other servers
 Filescan.new('lib/runners', true, false).each_filename do |name|
-  next if name == 'server_runner.rb'
+  next if name.match(/server_runner\.rb$/)
   puts "Executing #{name} #{action}"
   system(name, action)
 end

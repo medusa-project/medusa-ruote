@@ -13,6 +13,7 @@ require 'lib/engine'
 require 'lib/utils/bag_utils'
 require 'lib/utils/dir_utils'
 require 'lib/utils/logging'
+require 'lib/process_launcher'
 
 class MedusaServer
   include Logging
@@ -20,12 +21,14 @@ class MedusaServer
   attr_accessor :working_dir, :incoming_dir, :ready_dir, :processing_dir
   attr_accessor :poll_frequency, :incoming_dir_processing_delay
   attr_accessor :logger
+  attr_accessor :process_launcher
 
   def initialize
     self.working_dir = Dir.getwd
     read_config(working_dir)
     ensure_directories
     start_stdout_logger
+    self.process_launcher = ProcessLauncher.new
   end
 
   def start
@@ -91,18 +94,24 @@ class MedusaServer
       Filescan.new(self.ready_dir, false, false).each_dirname do |dir_name|
         bag = BagUtils.extract_bag(dir_name)
         #check the bag for the operation to do, failing if it's not known
-
-        #move to processing - after this things are in the hands of the
-        #workflow engine and process
-        begin
-          base_name = File.basename(dir_name)
-          File.rename(dir_name, File.join(self.processing_dir, base_name))
-          logger.info("Moved bag #{base_name} to processing directory.")
-        rescue SystemCallError
-          logger.error("Unable to move bag #{bag_name} to processing directory.")
+        process = process_launcher.process_for(bag)
+        logger.info("Process: #{process}")
+        if process
+          #move to processing - after this things are in the hands of the
+          #workflow engine and process
+          begin
+            base_name = File.basename(dir_name)
+            File.rename(dir_name, File.join(self.processing_dir, base_name))
+            logger.info("Moved bag #{base_name} to processing directory.")
+          rescue SystemCallError
+            logger.error("Unable to move bag #{bag_name} to processing directory.")
+          end
+          #start the process, passing in the processing directory
+          moved_directory = File.join(self.processing_dir, File.basename(dir_name))
+          process_launcher.process_bag(moved_directory)
+        else
+          logger.info("No process found for bag #{dir_name}")
         end
-        #start the process, passing in the processing directory
-
       end
     end
     logger.info('Started process launcher')
