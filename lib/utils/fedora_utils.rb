@@ -26,8 +26,9 @@ module FedoraUtils
       #add datastreams from the bag
       bag.bag_files.each do |f|
         filename = File.basename(f)
-        ds = ActiveFedora::Datastream.new(:dsLabel => filename, :controlGroup => "M", :blob => File.open(f))
-        item.add_datastream ds
+        ds = ActiveFedora::Datastream.new(:dsLabel => filename, :controlGroup => "M")
+        ds.content = File.open(f).read
+        item.add_datastream(ds)
       end
       item.save
       return item
