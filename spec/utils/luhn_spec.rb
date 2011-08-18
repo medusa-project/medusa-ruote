@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require 'lib/utils/luhn'
+require 'utils/luhn'
 
 #note that the uuids used here are some that Tom Habing generated, so that provides a bit of independent confirmation
 

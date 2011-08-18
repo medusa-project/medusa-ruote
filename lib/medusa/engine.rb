@@ -1,11 +1,11 @@
 #The workflow engine for Medusa.
+require File.join(File.dirname(__FILE__), '..', 'medusa')
 require 'singleton'
-require 'ruote'
 require 'ruote-amqp'
 require 'ruote/storage/fs_storage'
 
 #participants
-require 'lib/services/create_fedora_collection'
+require 'services/create_fedora_collection'
 
 module Medusa
   class MedusaEngine

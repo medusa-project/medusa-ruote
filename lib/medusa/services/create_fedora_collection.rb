@@ -1,8 +1,9 @@
-require 'lib/amqp_services/abstract_fedora_amqp_service'
-require 'lib/utils/luhn'
+require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
+require 'services/abstract_fedora_amqp_service'
+require 'utils/luhn'
 require 'uuid'
-require 'lib/medusa/basic_collection'
-require 'lib/utils/bag_utils'
+require 'models/basic_collection'
+require 'utils/bag_utils'
 
 module Medusa
   class CreateFedoraCollection < AbstractFedoraAMQPService

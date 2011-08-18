@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
-require 'demo/services/amqp_file_type_service'
+require 'services/create_fedora_collection'
 
-Medusa::AMQPFileTypeService.new.start
+Medusa::CreateFedoraCollection.new.start

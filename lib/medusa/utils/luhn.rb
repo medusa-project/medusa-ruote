@@ -1,5 +1,6 @@
 #c.f. http://en.wikipedia.org/wiki/Luhn_mod_N_algorithm
 #this is specialized to handle the case where our string represents a hexadecimal number
+require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
 
 module Medusa
   class Luhn

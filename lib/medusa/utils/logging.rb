@@ -1,6 +1,7 @@
 #because of the way this is used (with daemons) we need to set up a dummy logger
 #on stdout when the daemon class is initialized and then hook up the real logger
 #via start_logging after daemonization.
+require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
 require 'log4r'
 
 module Medusa

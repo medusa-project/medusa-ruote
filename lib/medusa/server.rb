@@ -2,18 +2,18 @@
 #The main server for Medusa workflow.
 #Figures out when to start processes.
 #Listens for returns on AMQP and uses them to resume processes.
-require 'rubygems'
+require File.join(File.dirname(__FILE__), '..','medusa')
 require 'bundler/setup'
 require 'ruote-amqp'
 require 'daemons'
 require 'eventmachine'
 require 'bagit'
 require 'filescan'
-require 'lib/engine'
-require 'lib/utils/bag_utils'
-require 'lib/utils/dir_utils'
-require 'lib/utils/logging'
-require 'lib/process_launcher'
+require 'engine'
+require 'utils/bag_utils'
+require 'utils/dir_utils'
+require 'utils/logging'
+require 'process_launcher'
 
 module Medusa
   class MedusaServer

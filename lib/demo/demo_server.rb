@@ -1,15 +1,14 @@
 #!/usr/bin/env ruby
-require 'rubygems'
+require File.join(File.dirname(__FILE__), '..', 'medusa')
 require 'bundler/setup'
-require 'ruote'
 require 'ruote/storage/fs_storage'
 require 'fileutils'
 require 'eventmachine'
 require 'ruote-amqp'
 require 'daemons'
 
-require 'lib/demo/demo_process'
-require 'lib/demo/demo_engine'
+require 'demo/demo_process'
+require 'demo/demo_engine'
 
 #needed only for the demo process
 FileUtils.mkdir_p(['in', 'out', 'processing'])

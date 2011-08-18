@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require 'lib/services/amqp_initial_ingest_service'
+require 'services/amqp_initial_ingest_service'
 
 module Medusa
   describe AMQPInitialIngestService do

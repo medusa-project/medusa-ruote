@@ -1,11 +1,11 @@
-require 'ruote'
+require File.join(File.dirname(__FILE__), '..', 'medusa')
 require 'ruote-amqp'
 require 'singleton'
-require 'lib/demo/services/amqp_file_type_service'
-require 'lib/services/amqp_initial_ingest_service'
-require 'lib/demo/services/local_checksum_participant'
-require 'lib/demo/services/move_to_out_participant'
-require 'lib/demo/services/move_to_processing_participant'
+require 'demo/services/amqp_file_type_service'
+require 'services/amqp_initial_ingest_service'
+require 'demo/services/local_checksum_participant'
+require 'demo/services/move_to_out_participant'
+require 'demo/services/move_to_processing_participant'
 
 module Medusa
   class DemoEngine

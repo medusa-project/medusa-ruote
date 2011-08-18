@@ -1,7 +1,8 @@
 #This will figure out what process to start for a bag and provide a way to start it.
-require 'lib/engine'
-require 'lib/processes/create_collection_process'
-require 'lib/utils/bag_utils'
+require File.join(File.dirname(__FILE__), '..', 'medusa')
+require 'engine'
+require 'processes/create_collection_process'
+require 'utils/bag_utils'
 
 module Medusa
   class ProcessLauncher

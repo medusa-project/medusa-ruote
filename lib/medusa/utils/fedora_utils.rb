@@ -1,4 +1,5 @@
 #broadly useful methods for interacting with Fedora
+require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
 require 'active-fedora'
 
 module Medusa

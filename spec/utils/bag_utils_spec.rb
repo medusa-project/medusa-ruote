@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require 'lib/utils/bag_utils'
+require 'utils/bag_utils'
 
 module Medusa
   describe BagUtils do

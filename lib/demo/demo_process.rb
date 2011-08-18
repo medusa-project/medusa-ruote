@@ -1,4 +1,4 @@
-require 'ruote'
+require File.join(File.dirname(__FILE__), '..', 'medusa')
 
 module Medusa
 

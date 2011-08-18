@@ -1,7 +1,7 @@
-require 'rubygems'
+require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
 require 'bundler/setup'
 require 'open3'
-require 'lib/amqp_services/abstract_amqp_service'
+require 'services/abstract_amqp_service'
 
 module Medusa
   class AMQPFileTypeService < AbstractAMQPService

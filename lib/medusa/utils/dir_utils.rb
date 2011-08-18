@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
 module Medusa
   module DirUtils
     module_function

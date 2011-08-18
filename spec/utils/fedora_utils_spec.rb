@@ -1,5 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
-require 'lib/utils/fedora_utils'
+puts $LOAD_PATH
+require 'utils/fedora_utils'
 require 'bagit'
 
 module Medusa
