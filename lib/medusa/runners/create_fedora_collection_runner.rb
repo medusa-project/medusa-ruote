@@ -2,4 +2,4 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
 require 'services/create_fedora_collection'
 
-Medusa::CreateFedoraCollection.new.start
+Medusa::Service::CreateFedoraCollection.new.start

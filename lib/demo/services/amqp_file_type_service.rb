@@ -1,10 +1,10 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'medusa')
 require 'bundler/setup'
 require 'open3'
-require 'services/abstract_amqp_service'
+require 'services/abstract_amqp'
 
 module Medusa
-  class AMQPFileTypeService < AbstractAMQPService
+  class AMQPFileTypeService < Service::AbstractAMQP
 
     def service_name
       'amqp_file_type_service'

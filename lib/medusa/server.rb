@@ -10,8 +10,8 @@ require 'eventmachine'
 require 'bagit'
 require 'filescan'
 require 'engine'
-require 'utils/bag_utils'
-require 'utils/dir_utils'
+require 'utils/bag'
+require 'utils/dir'
 require 'utils/logging'
 require 'process_launcher'
 
@@ -62,10 +62,10 @@ module Medusa
         Filescan.new(self.incoming_dir, false, false).each_dirname do |dir_name|
           #Make sure files have been unmodified for a while. Not strictly necessary, but cheaper
           #than checking the whole bag each time while it's still being copied in.
-          next unless DirUtils.directory_unmodified?(dir_name, self.incoming_dir_processing_delay)
+          next unless Medusa::Utils::Dir.directory_unmodified?(dir_name, self.incoming_dir_processing_delay)
           #make sure we have a valid bag
           begin
-            next unless BagUtils.extract_bag(dir_name)
+            next unless Medusa::Utils::Bag.extract_bag(dir_name)
           rescue InvalidBagError
             next
             #TODO? At some point maybe we'll also want to report invalid bags
@@ -93,7 +93,7 @@ module Medusa
     def start_process_launcher
       start_periodic_timer_with_mutex() do
         Filescan.new(self.ready_dir, false, false).each_dirname do |dir_name|
-          bag = BagUtils.extract_bag(dir_name)
+          bag = Medusa::Utils::Bag.extract_bag(dir_name)
           #check the bag for the operation to do, failing if it's not known
           process = process_launcher.process_for(bag)
           logger.info("Process: #{process}")
