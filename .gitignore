@@ -1,3 +1,13 @@
 .idea
 .rvmrc
 *~
+coverage/
+examples/
+items_*/
+medusa-ruote-storage/
+in/
+out/
+processing/
+ruote-stroage/
+pid/
+log/
