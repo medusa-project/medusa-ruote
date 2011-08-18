@@ -25,7 +25,7 @@ Daemons.run_proc('demo_server.rb', :dir => 'pid', :log => 'log',
   Dir.chdir(working_dir)
   pid = Kernel.fork
   if (pid)
-    RuoteAMQP::Receiver.new(DemoEngine.instance.engine)
+    RuoteAMQP::Receiver.new(Medusa::DemoEngine.instance.engine)
     Kernel.at_exit do
       Process.kill('TERM', pid)
     end
@@ -37,7 +37,7 @@ Daemons.run_proc('demo_server.rb', :dir => 'pid', :log => 'log',
         Dir['in/*_ready'].each do |dir|
           dir_name = File.basename(dir).sub(/_ready$/, '')
           puts "launching ruote process to handle #{dir_name}"
-          DemoEngine.instance.engine.launch(DemoProcess.process, 'dir' => dir_name)
+          Medusa::DemoEngine.instance.engine.launch(Medusa::DemoProcess.process, 'dir' => dir_name)
         end
       end
     end

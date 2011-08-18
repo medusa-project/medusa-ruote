@@ -3,5 +3,5 @@
 #script/server_runner.rb <start | stop | restart | ...>
 require 'lib/server'
 
-MedusaServer.new.start
+Medusa::MedusaServer.new.start
 
