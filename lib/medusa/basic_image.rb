@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'active-fedora'
 module Medusa
 
   class BasicImage < ActiveFedora::Base

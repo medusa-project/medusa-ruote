@@ -1,4 +1,4 @@
-#Medusa libraries
+require 'rubygems'
+$LOAD_PATH << File.expand_path(File.dirname(__FILE__))
+
 module Medusa; end
-require 'medusa/basic_image'
-require 'medusa/basic_collection'

@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'active-fedora'
+
 module Medusa
 
   class BasicCollection < ActiveFedora::Base
