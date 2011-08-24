@@ -38,6 +38,8 @@ module Medusa
 
             return h
 
+            #TODO - regarding below see comments on add_error_to_workitem - how does Ruote really want errors
+            #to be reported?
             #TODO this should probably do something that will indicate to the engine that
             #the step failed. We need to research that some more - there may be an
             #idiomatic way to do it.
