@@ -8,6 +8,7 @@ require 'utils/bag'
 module Medusa
   module Service
     class CreateFedoraCollection < AbstractFedoraAMQP
+
       def service_name
         'create_fedora_collection'
       end
@@ -48,9 +49,9 @@ module Medusa
             #  add_error_to_workitem(h, "#{e.class}: #{e.message}")
             #  return h
           end
-
         end
       end
+
     end
   end
 end
