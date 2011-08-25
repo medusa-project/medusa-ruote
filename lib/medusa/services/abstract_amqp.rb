@@ -109,14 +109,10 @@ module Medusa
         workitem.is_a?(Hash) ? workitem.to_json : workitem
       end
 
-      #TODO what is the actual convention for doing this in Ruote?
-      #From the docs it looks like something should go into workitem.fields['error'], but exactly
-      #what to do isn't clear. It would bear some experimentation to figure out what is happening
-      #here and to take advantage of Ruote's existing facilities if possible and not roll our own
-      #stuff here.
-      def add_error_to_workitem(hash, error_string)
-        hash['fields']['errors'] ||= []
-        hash['fields']['errors'] << error_string
+      #RuoteAMQP doesn't appear to have a standard way to report errors.
+      #See Medusa::Receiver::AMQP for the full work-around.
+      def set_workitem_error(hash, error_string)
+        hash['fields']['__error__'] = error_string
       end
 
     end

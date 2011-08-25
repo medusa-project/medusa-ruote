@@ -14,6 +14,7 @@ require 'utils/bag'
 require 'utils/dir'
 require 'utils/logging'
 require 'process_launcher'
+require 'receiver/amqp'
 
 module Medusa
   class MedusaServer
@@ -38,7 +39,7 @@ module Medusa
         Dir.chdir(working_dir)
         pid = Kernel.fork
         if (pid)
-          RuoteAMQP::Receiver.new(MedusaEngine.instance.engine)
+          Medusa::Receiver::AMQP.new(MedusaEngine.instance.engine)
           Kernel.at_exit do
             Process.kill('TERM', pid)
           end
