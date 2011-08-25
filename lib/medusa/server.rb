@@ -39,7 +39,7 @@ module Medusa
         Dir.chdir(working_dir)
         pid = Kernel.fork
         if (pid)
-          Medusa::Receiver::AMQP.new(MedusaEngine.instance.engine)
+          Medusa::Receiver::AMQP.new(MedusaEngine.instance.engine, :queue => 'medusa_workitems')
           Kernel.at_exit do
             Process.kill('TERM', pid)
           end

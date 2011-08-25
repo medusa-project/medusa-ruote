@@ -84,7 +84,7 @@ module Medusa
       end
 
       def amqp_return_queue
-        'ruote_workitems'
+        'medusa_workitems'
       end
 
       #Take the workitem (as a hash or a JSON string) and return it to
