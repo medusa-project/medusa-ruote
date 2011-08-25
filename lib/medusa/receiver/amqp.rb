@@ -14,8 +14,7 @@ module Medusa
 
       def initialize(fei, error_message)
         self.fei = fei
-        self.message = error_message
-        super(self.message)
+        super(error_message)
       end
     end
 
